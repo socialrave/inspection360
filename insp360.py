@@ -123,6 +123,10 @@ async def button(update: Update, context: CallbackContext) -> None:
         await query.edit_message_text(text="Опишите, что не выполнено?")
         context.user_data["awaiting_input"] = True
         return "INPUT_DATA2"
+
+    elif query.data == 'notification_photomaker': 
+        await query.edit_message_text("Пожалуйста, введите ваше замечание:") 
+        return "AWAITING_NOTE"
     
     elif query.data == 'google_sheets':
         await send_google_sheets_data(query, context)    
