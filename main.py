@@ -13,6 +13,7 @@ def main() -> None:
             INPUT_DATA: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_input)],
             PHOTO_CHECK: [CallbackQueryHandler(photo_check, pattern='^(yesyes|ohno)$')],
             "INPUT_DATA2": [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_no_input)],
+            AWAITING_NOTE: [MessageHandler(filters.TEXT & ~filters.COMMAND, notification_photomaker_button)],
         },
         fallbacks=[CommandHandler("cancel", cancel)],
     )
