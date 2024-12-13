@@ -290,27 +290,17 @@ async def send_google_sheets_data(query, context):
         error_message = f"Ошибка при работе с Google Sheets: {e}"
         await query.message.reply_text(error_message) 
 
-async def button_handler(update: Update, context: CallbackContext) -> None:
-    query = update.callback_query
-    await query.answer()
+async def notification_photomaker_button(update: Update, context: CallbackContext) -> int: 
+    notif_dict = update.message.text.strip() 
+    context.chat_data[notif_dict] = notif_dict 
+     
+    chat_id = "-1002467273442"    
+    await send_message_photomaker(chat_id, notif_dict, bot) 
+    await update.message.reply_text("Сообщение отправлено фотомейкеру.", reply_markup=back_step()) 
+    return ConversationHandler.END
 
-    if query.data == 'notification_photomaker':
-        await query.edit_message_text("Пожалуйста, введите ваше замечание:")
-        context.user_data["aw_input"] = True
-
-async def notification_photomaker_button(update: Update, context: CallbackContext) -> int:
-    if context.user_data.get("aw_input"):
-        notif_text = update.message.text.strip()
-        
-        context.user_data["notification"] = notif_text
-        
-        photomaker_chat_id = "-10024672734"  #чат ID
-        await context.bot.send_message(chat_id=photomaker_chat_id, text=notif_text)
-
-        await update.message.reply_text("Ваши данные успешно отправлены.")
-
-        context.user_data["aw_input"] = False
-
+async def send_message_photomaker(chat_id: str, text: str, context) -> None: 
+    await context.bot.send_message(chat_id=chat_id, text=text)
 
 async def cancel(update: Update, context: CallbackContext) -> int:
     await update.message.reply_text("Операция отменена.")
