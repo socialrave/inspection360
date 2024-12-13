@@ -290,16 +290,18 @@ async def send_google_sheets_data(query, context):
         error_message = f"Ошибка при работе с Google Sheets: {e}"
         await query.message.reply_text(error_message) 
 
-async def notification_photomaker_button(update: Update, context: CallbackContext) -> int: 
+async def notification_photomaker_button(update: Update, context: CallbackContext) -> int:
     notif_dict = update.message.text.strip() 
-    context.chat_data[notif_dict] = notif_dict 
-     
-    chat_id = "-1002467273442"    
-    await send_message_photomaker(chat_id, notif_dict, bot) 
-    await update.message.reply_text("Сообщение отправлено фотомейкеру.", reply_markup=back_step()) 
+    context.chat_data["notification"] = notif_dict 
+
+    chat_id = "-100246722" 
+    
+    await send_message_photomaker(chat_id, notif_dict, context)
+    await update.message.reply_text("Сообщение отправлено фотомейкеру.", reply_markup=back_step())
+    
     return ConversationHandler.END
 
-async def send_message_photomaker(chat_id: str, text: str, context) -> None: 
+async def send_message_photomaker(chat_id: str, text: str, context) -> None:
     await context.bot.send_message(chat_id=chat_id, text=text)
 
 async def cancel(update: Update, context: CallbackContext) -> int:
