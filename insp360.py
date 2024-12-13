@@ -110,7 +110,7 @@ async def button(update: Update, context: CallbackContext) -> None:
     
     elif query.data == 'contacts': 
         reply_markup = back_step()
-        await query.edit_message_text(text="Малеванный Владимир, +7 (977) 267-17-38. \nСсылка на телеграм: @gtoooe\n\nЛангаев Артем, +7 (926) 708-18-27. \nСсылка на телеграм: @ww5575262337\n\nВинокуров Дмитрий, +7 (968) 470-51-71.\nСсылка на телеграм: @vindim_a\n\nКрадинов Борис, +7 (926) 187-98-88. \nСсылка на телеграм: @Boris6", reply_markup=reply_markup)
+        await query.edit_message_text(text="О_О", reply_markup=reply_markup)
 
     elif query.data == 'main_menu': 
         reply_markup = main_menu_keyboard()
@@ -219,7 +219,6 @@ def read_google_sheets():
         if len(value_ranges) < 5:
             raise Exception("EEEEdata depletion")
 
-        #Считываем данные из диапазонов
         employees = value_ranges[0].get("values", [[]])[0] if value_ranges[0].get("values", []) else []
         dates = value_ranges[1].get("values", [[]])[0] if value_ranges[1].get("values", []) else []
         days_of_week = value_ranges[2].get("values", []) if len(value_ranges) > 2 else []
@@ -258,7 +257,6 @@ def timetable(employees, dates, days_of_week, objects, especially_marks):
                 day_key = day.strip()
                 days_dict[day_key] = obj_with_mark
 
-        # Упорядочиваем дни недели по заданному порядку
         sorted_days = sorted(
             days_dict.items(),
             key=lambda x: min(
@@ -269,60 +267,7 @@ def timetable(employees, dates, days_of_week, objects, especially_marks):
             formatted_schedule += f"{day} - {obj}\n"
 
     return formatted_schedule.strip()
-
-#def read_google_sheets_twin():
-    try:
-        credentials = Credentials.from_service_account_file(CREDENTIALS_FILE)
-        service = build("sheets", "v4", credentials=credentials)
-        
-        RANGES = ["График 2024!O2:R2", "График 2024!O3:R3", "График 2024!O4:R33", "График 2024!C4:C33"]
-        sheet = service.spreadsheets()
-        
-        result = sheet.values().batchGet(spreadsheetId=SPREADSHEET_ID, ranges=RANGES).execute()
-        value_ranges = result.get("valueRanges", [])
-        
-        if len(value_ranges) < 4:
-            raise Exception("Ошибка EEEEdata depletion")
-        
-        employees2 = value_ranges[0].get("values", [[]])[0] if value_ranges[0].get("values", []) else []
-        dates2 = value_ranges[1].get("values", [[]])[0] if value_ranges[1].get("values", []) else []
-        days_of_week2 = value_ranges[2].get("values", []) if len(value_ranges) > 2 else []
-        objects2 = value_ranges[3].get("values", []) if len(value_ranges) > 3 else []
-        
-        return employees2, dates2, days_of_week2, objects2
     
-    except Exception as e:
-        raise Exception(f"Ошибка при работе с sheets: {e}")
-    
-#def timetable_twin(employees2, dates2, days_of_week2, objects2):
-    if not employees2 or not dates2 or not days_of_week2 or not objects2:
-        return "Данных нет"
-    
-    days_order2 = {"Пн": 1, "Вт": 2, "Ср": 3, "Чт": 4, "Пт": 5}
-    
-    formatted_schedule2 = f"{dates2[0]}\n\n"
-    for i, employee2 in enumerate(employees2):
-        formatted_schedule2 += f"<b>{employee2}</b>:\n"
-        days_set2 = {}
-        
-        for row_index, row in enumerate(days_of_week2):
-            day2 = row[i] if len(row) > i else None
-            if day2:
-                obj2 = objects2[row_index][0] if len(objects2) > row_index and len(objects2[row_index]) > 0 else "Нет объекта"
-                day_key2 = day2.strip()
-                days_set2[day_key2] = obj2.strip()
-                
-        sorted_days2 = sorted(
-            days_set2.items(),
-            key=lambda x: min(
-                days_order2.get(day.strip(), float('inf')) for day in x[0].split(",")
-            )
-        )
-        for day2, obj2 in sorted_days2:
-            formatted_schedule2 += f"{day2} - {obj2}\n"
-
-    return formatted_schedule2.strip() 
-
 async def send_google_sheets_data(query, context):
     try:
         employees, dates, days_of_week_data, objects, especially_marks = read_google_sheets()
@@ -341,7 +286,6 @@ async def send_google_sheets_data(query, context):
         error_message = f"Ошибка при работе с Google Sheets: {e}"
         await query.message.reply_text(error_message) 
 
-# Обработчик для кнопки
 async def button_handler(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
     await query.answer()
