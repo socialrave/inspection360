@@ -11,7 +11,7 @@ AWAITING_NOTE = 1
 INPUT_DATA, PHOTO_CHECK = range(2)
 CREDENTIALS_FILE = "grand-mile_googlesheets.json" 
 CREDENTIALS_FILE2 = "grand-mile-googledrive.json" 
-SPREADSHEET_ID = "19UPr5iztlht5wUxNvE0LQb5_UXcTG7eai6WkgtpKnog" 
+SPREADSHEET_ID = "19UPUb5_UXcTG7eai6WkgtpKnog" 
 
 
 async def start(update: Update, context: CallbackContext) -> None:
@@ -291,12 +291,8 @@ async def button_handler(update: Update, context: CallbackContext) -> None:
     await query.answer()
 
     if query.data == 'notification_photomaker':
-        # Запрашиваем текст от пользователя
         await query.edit_message_text("Пожалуйста, введите ваше замечание:")
-        
-        # Устанавливаем временную метку, чтобы следить за вводом
         context.user_data["aw_input"] = True
-
 
 async def notification_photomaker_button(update: Update, context: CallbackContext) -> int:
     if context.user_data.get("aw_input"):
@@ -304,7 +300,7 @@ async def notification_photomaker_button(update: Update, context: CallbackContex
         
         context.user_data["notification"] = notif_text
         
-        photomaker_chat_id = "-1002467273442"  # Ваш чат ID
+        photomaker_chat_id = "-10024672734"  #чат ID
         await context.bot.send_message(chat_id=photomaker_chat_id, text=notif_text)
 
         await update.message.reply_text("Ваши данные успешно отправлены.")
